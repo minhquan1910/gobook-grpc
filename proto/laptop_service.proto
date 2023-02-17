@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "gobook/pb";
+
+import "laptop_message.proto";
+import "filter_message.proto";
+
+message CreateLaptopRequest {
+    Laptop laptop = 1;
+}
+
+message CreateLaptopResponse {
+    string id = 1;
+}
+
+message SearchLaptopRequest {
+    Filter filter = 1;
+}
+
+message SearchLaptopResponse {
+    Laptop laptop = 1;
+}
+
+message ImageInfo {
+    string laptop_id = 1;
+    string image_type = 2;
+}
+
+message UploadImageRequest {
+    oneof data {
+        ImageInfo info = 1;
+        bytes chunk_data = 2;
+    }
+}
+
+message UploadImageResponse {
+    string id = 1;
+    uint32 size = 2;
+}
+
+message RateLaptopRequest {
+    string laptop_id = 1;
+    double score = 2;
+}
+
+message RateLaptopResponse {
+    string laptop_id = 1;
+    uint32 rated_count = 2;
+    double average_score = 3;
+}
+
+service LaptopService {
+    rpc CreateLaptopService(CreateLaptopRequest) returns (CreateLaptopResponse) {};
+    rpc SearchLaptopService(SearchLaptopRequest) returns (stream SearchLaptopResponse) {};
+    rpc UploadImageService(stream UploadImageRequest) returns (UploadImageResponse) {};
+    rpc RateLaptopService(stream RateLaptopRequest) returns (stream RateLaptopResponse) {};
+}
