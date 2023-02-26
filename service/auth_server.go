@@ -29,11 +29,11 @@ func (server *AuthServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.
 		return nil, status.Errorf(codes.NotFound, "cannot find user %v", err)
 	}
 
-	if user.IsPasswordCorrect(req.GetPassword()) {
-		return nil, status.Errorf(codes.Internal, "wrong password")
+	if user == nil || !user.IsPasswordCorrect(req.GetPassword()) {
+		return nil, status.Errorf(codes.NotFound, "incorrect user password")
 	}
 
-	token, _, err := server.jwtManager.CreateToken(req.GetUsername(), 15*time.Minute)
+	token, _, err := server.jwtManager.CreateToken(req.GetUsername(), user.Role, 15*time.Minute)
 
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot create token")

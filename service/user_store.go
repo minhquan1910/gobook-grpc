@@ -38,7 +38,7 @@ func (store *InMemoryUserStore) Find(username string) (*User, error) {
 
 	user := store.users[username]
 
-	if user != nil {
+	if user == nil {
 		return nil, fmt.Errorf("cannot found user")
 	}
 

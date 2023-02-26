@@ -8,7 +8,7 @@ import (
 )
 
 type JWTManager interface {
-	CreateToken(username string, duration time.Duration) (string, *Payload, error)
+	CreateToken(username string, role string, duration time.Duration) (string, *Payload, error)
 	VerifyToken(token string) (*Payload, error)
 }
 
@@ -22,8 +22,8 @@ func NewJWTToken(key string) JWTManager {
 	}
 }
 
-func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (string, *Payload, error) {
-	payload, err := NewPayload(username, duration)
+func (maker *JWTMaker) CreateToken(username string, role string, duration time.Duration) (string, *Payload, error) {
+	payload, err := NewPayload(username, role, duration)
 
 	if err != nil {
 		return "", payload, err
